@@ -39,33 +39,33 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    if (!email || !password) {
+    const { email, password } = req.body;
+    try {
+      if (!email || !password) {
+        res.status(400).json({
+          success: false,
+          message: "All Fields are required.",
+        });
+      }
+      const user = await User.findOne({ email });
+      if (!user) {
+        res.status(400).json({
+          success: false,
+          message: "Incorrect email or password",
+        });
+      }
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+      if (!isPasswordMatch) {
+        res.status(400).json({
+          success: false,
+          message: "Incorrect email or password",
+        });
+      }
+      generateToken(res, user, `welcome back ${user.name}`);
+    } catch (e) {
       res.status(400).json({
         success: false,
-        message: "All Fields are required.",
+        message: "Failed to Login",
       });
     }
-    const user = await User.findOne({ email });
-    if (!user) {
-      res.status(400).json({
-        success: false,
-        message: "Incorrect email or password",
-      });
-    }
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
-      res.status(400).json({
-        success: false,
-        message: "Incorrect email or password",
-      });
-    }
-    generateToken(res, user, `welcome back ${user.name}`);
-  } catch (e) {
-    res.status(400).json({
-      success: false,
-      message: "failed to login",
-    });
-  }
 };
