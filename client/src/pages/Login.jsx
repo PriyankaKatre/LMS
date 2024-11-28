@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +17,7 @@ import {
   useLoginUserMutation,
 } from "../features/api/authApi";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 //3VX0Q8Nazju7VlKk
 
@@ -33,11 +34,21 @@ const Login = () => {
 
   const [
     registerUser,
-    { data: registerData, error: registerError, isLoading: registerIsLoading },
+    {
+      data: registerData,
+      error: registerError,
+      isLoading: registerIsLoading,
+      isSuccess: registerIsSuccess,
+    },
   ] = useRegisterUserMutation();
   const [
     loginUser,
-    { data: loginData, error: loginError, isLoading: loginIsLoading },
+    {
+      data: loginData,
+      error: loginError,
+      isLoading: loginIsLoading,
+      isSuccess: loginIsSuccess,
+    },
   ] = useLoginUserMutation();
 
   const handleChange = (e, type) => {
@@ -54,6 +65,25 @@ const Login = () => {
     const action = type === "signup" ? registerUser : loginUser;
     await action(inputData);
   };
+
+  useEffect(() => {
+    if (registerIsSuccess && registerData) {
+      toast.success(registerData.message || "SignUp Successful");
+    }
+    if (registerError) {
+      console.log("registerError", registerError);
+      toast.error(registerError.data?.message || "SignUp Failed");
+    }
+  }, [registerIsSuccess, registerData, registerError]);
+  useEffect(() => {
+    if (loginIsSuccess && loginData) {
+      toast.success(loginData.message || "Login Successful");
+    }
+    if (loginError) {
+      console.log("loginError", loginError);
+      toast.error(loginError.data?.message || "Login Failed");
+    }
+  }, [loginIsSuccess, loginData, loginError]);
   return (
     <div className="flex items-center justify-center">
       <Tabs defaultValue="signup" className="w-[400px]">

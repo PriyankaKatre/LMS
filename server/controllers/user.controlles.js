@@ -31,7 +31,7 @@ export const register = async (req, res) => {
     });
   } catch (e) {
     console.log("failed Register", e);
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: "Failed to register",
     });
@@ -39,33 +39,34 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    const { email, password } = req.body;
-    try {
-      if (!email || !password) {
-        res.status(400).json({
-          success: false,
-          message: "All Fields are required.",
-        });
-      }
-      const user = await User.findOne({ email });
-      if (!user) {
-        res.status(400).json({
-          success: false,
-          message: "Incorrect email or password",
-        });
-      }
-      const isPasswordMatch = await bcrypt.compare(password, user.password);
-      if (!isPasswordMatch) {
-        res.status(400).json({
-          success: false,
-          message: "Incorrect email or password",
-        });
-      }
-      generateToken(res, user, `welcome back ${user.name}`);
-    } catch (e) {
+  const { email, password } = req.body;
+  try {
+    if (!email || !password) {
       res.status(400).json({
         success: false,
-        message: "Failed to Login",
+        message: "All Fields are required.",
       });
     }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect email or password",
+      });
+    }
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    console.log("password", user.password);
+    if (!isPasswordMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect email or password",
+      });
+    }
+    generateToken(res, user, `welcome back ${user.name}`);
+  } catch (e) {
+    return res.status(400).json({
+      success: false,
+      message: "Failed to Login",
+    });
+  }
 };
