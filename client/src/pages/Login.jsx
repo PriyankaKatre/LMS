@@ -18,6 +18,7 @@ import {
 } from "../features/api/authApi";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 //3VX0Q8Nazju7VlKk
 
@@ -51,41 +52,43 @@ const Login = () => {
     },
   ] = useLoginUserMutation();
 
-  const handleChange = (e, type) => {
-    let { name, value } = e.target;
-    if (type === "signup") {
-      setsignupInput({ ...signupInput, [name]: value });
-    } else {
-      setLoginInput({ ...loginInput, [name]: value });
-    }
-  };
+  const navigate = useNavigate();
+     const handleChange = (e, type) => {
+       let { name, value } = e.target;
+       if (type === "signup") {
+         setsignupInput({ ...signupInput, [name]: value });
+       } else {
+         setLoginInput({ ...loginInput, [name]: value });
+       }
+     };
 
-  const handleSubmit = async (type) => {
-    let inputData = type === "signup" ? signupInput : loginInput;
-    const action = type === "signup" ? registerUser : loginUser;
-    await action(inputData);
-  };
+     const handleSubmit = async (type) => {
+       let inputData = type === "signup" ? signupInput : loginInput;
+       const action = type === "signup" ? registerUser : loginUser;
+       await action(inputData);
+     };
 
-  useEffect(() => {
-    if (registerIsSuccess && registerData) {
-      toast.success(registerData.message || "SignUp Successful");
-    }
-    if (registerError) {
-      console.log("registerError", registerError);
-      toast.error(registerError.data?.message || "SignUp Failed");
-    }
-  }, [registerIsSuccess, registerData, registerError]);
-  useEffect(() => {
-    if (loginIsSuccess && loginData) {
-      toast.success(loginData.message || "Login Successful");
-    }
-    if (loginError) {
-      console.log("loginError", loginError);
-      toast.error(loginError.data?.message || "Login Failed");
-    }
-  }, [loginIsSuccess, loginData, loginError]);
+     useEffect(() => {
+       if (registerIsSuccess && registerData) {
+         toast.success(registerData.message || "SignUp Successful");
+       }
+       if (registerError) {
+         console.log("registerError", registerError);
+         toast.error(registerError.data?.message || "SignUp Failed");
+       }
+     }, [registerIsSuccess, registerData, registerError]);
+     useEffect(() => {
+       if (loginIsSuccess && loginData) {
+         toast.success(loginData.message || "Login Successful");
+         navigate("/");
+       }
+       if (loginError) {
+         console.log("loginError", loginError);
+         toast.error(loginError.data?.message || "Login Failed");
+       }
+     }, [loginIsSuccess, loginData, loginError]);
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center mt-20">
       <Tabs defaultValue="signup" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup">Signup </TabsTrigger>
