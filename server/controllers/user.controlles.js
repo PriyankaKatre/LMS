@@ -70,3 +70,17 @@ export const login = async (req, res) => {
     });
   }
 };
+
+export const logout = async (_, res) => {
+  try {
+    return res.status(200).cookie("token", "123", { maxAge: 0 }).json({
+      message: "Logged out successfully.",
+      success: true,
+    });
+  } catch (e) {
+    return res.status(400).json({
+      success: false,
+      message: "Failed to Login",
+    });
+  }
+};
