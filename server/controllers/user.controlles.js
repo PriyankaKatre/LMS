@@ -85,26 +85,26 @@ export const logout = async (_, res) => {
   }
 };
 
-const getUserProfile = async (req, res) => {
-    try {
-        let userId = req.id;
-        //populate todo
-        const user = await User.findeById(userId).select('_password');
-        if (!user) {
-            return res.status(401).json({
-              success: false,
-              message: "Profile not found",
-            });
-        }
-        return res.status(200).json({
-          success: true,
-          user,
-        });
+export const getUserProfile = async (req, res) => {
+  try {
+    let userId = req.id;
+
+    //populate todo
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Profile not found",
+      });
     }
-    catch (e) {
-        return res.status(400).json({
-            success: false,
-            message: 'Failed to load user'
-        })
-    }
-}
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (e) {
+    return res.status(400).json({
+      success: false,
+      message: "Failed to load user",
+    });
+  }
+};

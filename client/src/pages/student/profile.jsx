@@ -14,6 +14,7 @@ import {
 import { Loader } from "lucide-react";
 import Courses from "./courses";
 import Course from "./course";
+import { useLoadUserQuery } from "@/features/api/authApi";
 
 const ProfileSkeleton = () => {
   return (
@@ -43,15 +44,23 @@ const ProfileSkeleton = () => {
 };
 
 const Profile = () => {
-  const isLoading = true;
-  const enrolledCourses = [1, 2];
+  const { data, isLoading } = useLoadUserQuery();
+  if (isLoading) {
+    return <ProfileSkeleton />;
+  }
+  if (!data) {
+    return <div>Loading or data is undefined</div>;
+  }
+  const { user } = data;
   return (
     <div className="max-w-5xl mx-auto px-4 my-24">
       <h1 className="font-bold text-2xl text-center md:text-left">Profile</h1>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 my-3">
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage
+              src={user.photoUrl || "https://github.com/shadcn.png"}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>
@@ -60,7 +69,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Name :
               <span className="font-normal text-gray-700 dark:text-gray-300">
-                Priyanka Mearstack
+                {user.name}
               </span>
             </h1>
           </div>
@@ -68,7 +77,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Email :
               <span className="font-normal text-gray-700 dark:text-gray-300">
-                Priyanka@gmail.com
+                {user.email}
               </span>
             </h1>
           </div>
@@ -76,7 +85,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Role :
               <span className="font-normal text-gray-700 dark:text-gray-300">
-                Instructor
+                {user.role.toUpperCase()}
               </span>
             </h1>
           </div>
@@ -125,12 +134,13 @@ const Profile = () => {
       <div className="">
         <h1 className="font-medium text-lg">Courses you are enrolled in</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
-          {enrolledCourses.length === 0 ? (
+          {user.enrolledCourses.length === 0 ? (
             <h1>You haven't enrolled yet</h1>
           ) : (
-            enrolledCourses.map((_, index) => (
-              <div key={index}>
-                <Course />
+            user.enrolledCourses.length > 0 &&
+            user?.enrolledCourses?.map((course) => (
+              <div key={course.id}>
+                <Course course={course} />
               </div>
             ))
           )}
