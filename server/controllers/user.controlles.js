@@ -117,13 +117,34 @@ const updateProfile = async (req, res) => {
 
         const user = await user.findById(userId);
         if (!user) {
-            return res.status(400).json({
-              success: false,
-              message: "User Not Found",
-            });
+          return res.status(400).json({
+            success: false,
+            message: "User Not Found",
+          });
         }
+
+        //extract public id of the old image from the url if it exists
+
+        if (user.photoUrl) {
+          const publicId = user.photoUrl.split("/").pop().split(".")[0];
+          deleteMediaFromCloudinary(publicId);
+        }
+
+        //uplod new photo
+
+        const cloudResponse = await uploadMedia(profilePhoto.path);
+        const photoUrl = cloudResponse.secure_url;
         const updatedData = { name, photoUrl };
-        
+        const updateUser = await User.findByIdAndUpdate(userId, updatedData, {
+          new: true,
+        }).select('-password');
+
+        return res.status(200).json({
+          success: true,
+          user: updateUser,
+          message: "Profile updated successfully",
+        });
+
     } catch (e) {
       return res.status(400).json({
         success: false,
