@@ -1,13 +1,11 @@
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 
-dotenv.config()(async function () {
-  // Configuration
-  cloudinary.config({
-    api_key: process.env.api_key,
-    api_secret: process.env.api_secret,
-    cloud_name: process.env.cloud_name,
-  });
+dotenv.config();
+cloudinary.config({
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+  cloud_name: process.env.CLOUD_NAME,
 });
 
 export const uploadMedia = async (file) => {

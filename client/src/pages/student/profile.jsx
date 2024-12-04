@@ -14,7 +14,12 @@ import {
 import { Loader } from "lucide-react";
 import Courses from "./courses";
 import Course from "./course";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import {
+  useLoadUserQuery,
+  useUpdateUserMutation,
+} from "@/features/api/authApi";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const ProfileSkeleton = () => {
   return (
@@ -44,14 +49,61 @@ const ProfileSkeleton = () => {
 };
 
 const Profile = () => {
-  const { data, isLoading } = useLoadUserQuery();
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const { data, isLoading, refetch } = useLoadUserQuery();
+  const [
+    updateUser,
+    {
+      data: updateUserData,
+      isLoading: updateUserIsLoading,
+      isError,
+      error,
+      isSuccess,
+    },
+  ] = useUpdateUserMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+      toast.success(updateUserData.message || "Profile Updated");
+    }
+    if (isError) {
+      toast.error(error.message || "Error while uploading file");
+    }
+  }, [isError, updateUserData, isSuccess]);
+
+  useEffect(() => {
+    if (data) {
+      setName(data.user.name);
+    }
+  }, [data]);
+
+  const onChangeHandler = (e) => {
+    let file = e.target.files?.[0];
+    console.log(file);
+    if (file) {
+      setProfilePhoto(file);
+    }
+  };
+
+  const updateUserHandler = async () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("profilePhoto", profilePhoto);
+    await updateUser(formData);
+  };
+
   if (isLoading) {
     return <ProfileSkeleton />;
   }
+
   if (!data) {
     return <div>Loading or data is undefined</div>;
   }
+
   const { user } = data;
+
   return (
     <div className="max-w-5xl mx-auto px-4 my-24">
       <h1 className="font-bold text-2xl text-center md:text-left">Profile</h1>
@@ -110,14 +162,26 @@ const Profile = () => {
                     type="text"
                     placeholder="Name"
                     className="col-span-3"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
                   />
                   <Label>Profile Photo</Label>
-                  <Input type="file" accept="image/*" className="col-span-3" />
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    className="col-span-3"
+                    onChange={(e) => onChangeHandler(e)}
+                  />
                 </div>
               </div>
               <DialogFooter>
-                <Button disabled={isLoading}>
-                  {isLoading ? (
+                <Button
+                  disabled={updateUserIsLoading}
+                  onClick={(e) => updateUserHandler(e)}
+                >
+                  {updateUserIsLoading ? (
                     <>
                       <Loader className="mr-2 h-4 w-4 animate-spin" /> Please
                       Wait
