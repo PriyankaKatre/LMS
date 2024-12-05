@@ -64,7 +64,7 @@ const NavBar = () => {
               <DropdownMenuTrigger>
                 <Avatar>
                   <AvatarImage
-                    src={user.photoUrl || "https://github.com/shadcn.png"}
+                    src={user?.photoUrl || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
@@ -81,14 +81,20 @@ const NavBar = () => {
                 <DropdownMenuItem onClick={logoutHandler}>
                   Log out
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                {user.role === "instructor" && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="outline">Login</Button>
-              <Button>SignUp</Button>
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button onClick={() => navigate("/login")}>SignUp</Button>
             </div>
           )}
           <DarkMode />
