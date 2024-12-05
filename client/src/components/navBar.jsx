@@ -27,15 +27,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "@/features/api/authApi";
 
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
+  const { user } = useSelector((store) => store.auth);
+
   const navigate = useNavigate();
   const [logout, { data, isSuccess }] = useLogoutMutation();
 
   useEffect(() => {
     isSuccess && toast.success(data.message || "User Logged out.");
   }, [isSuccess]);
-  let user = true;
+
   console.log("logout", logout);
 
   const logoutHandler = async () => {
@@ -60,7 +63,9 @@ const NavBar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={user.photoUrl || "https://github.com/shadcn.png"}
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
