@@ -6,6 +6,7 @@ import MainLayout from "./layout/MainLayout";
 import Courses from "./pages/student/courses";
 import MyLearning from "./pages/student/myLearning";
 import Profile from "./pages/student/profile";
+import Sidebar from "./pages/admin/Sidebar";
 
 const appRouter = createBrowserRouter([
   {
@@ -32,7 +33,13 @@ const appRouter = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
-      },
+        },
+
+        // Admin Routes
+        {
+            path: "admin",
+            element: <Sidebar />
+        }
     ],
   },
 ]);
