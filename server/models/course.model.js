@@ -22,7 +22,7 @@ const courseSchema = mongoose.Schema(
       enum: ["Beginner", "Medium", "Advance"],
     },
     coursePrice: {
-      type: number,
+      type: Number,
     },
     courseThumbnail: {
       type: String,
@@ -34,11 +34,11 @@ const courseSchema = mongoose.Schema(
       },
     ],
     lectures: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: Lecture,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Lecture",
     },
     creator: {
-      type: Mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     isPublished: {

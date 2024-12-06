@@ -1,6 +1,6 @@
-import { express } from "express";
-import { createCourse } from "../controllers/course.controllers";
-import isAutheticated from "../middleware/isAutheticated";
+import  express  from "express";
+import { createCourse } from "../controllers/course.controllers.js";
+import isAutheticated from "../middleware/isAutheticated.js";
 
 const router = express.Router();
 
