@@ -12,7 +12,7 @@ const router = express.Router();
 router.route("/").post(isAutheticated, createCourse);
 router.route("/").get(isAutheticated, getCreatorCourses);
 router
-  .route("/")
+  .route("/:courseId")
   .put(isAutheticated, upload.single("courseThumbnail"), editCourse);
 
 export default router;

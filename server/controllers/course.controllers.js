@@ -1,4 +1,8 @@
 import { Course } from "../models/course.model.js";
+import {
+  deleteMediaFromCloudinary,
+  uploadMedia,
+} from "../utiles/cloudinary.js";
 
 export const createCourse = async (req, res) => {
   try {
@@ -68,7 +72,6 @@ export const editCourse = async (req, res) => {
     let courseThumbnail;
     if (thumbnail) {
         if (course.courseThumbnail) {
-          console.log("course.courseThumbnail", course.courseThumbnail);
         const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
         await deleteMediaFromCloudinary(publicId); // delete old image
       }
