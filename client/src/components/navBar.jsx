@@ -113,33 +113,33 @@ const MobileNavbar = () => {
   let role = "instructor";
   return (
     <Sheet>
-    <SheetTrigger>
+      <SheetTrigger>
         <Button
-        size="icon"
-        className="rounded-full bg-gray-200 hover:bg-gray-200"
+          size="icon"
+          className="rounded-full bg-gray-200 hover:bg-gray-200"
         >
-        <Menu />
+          <Menu />
         </Button>
-    </SheetTrigger>
-    <SheetContent className="flex flex-col">
+      </SheetTrigger>
+      <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
-        <SheetTitle>E-Learning</SheetTitle>
-        <DarkMode />
+          <SheetTitle>E-Learning</SheetTitle>
+          <DarkMode />
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
-        <span>My Learning</span>
-        <span>Edit Profile</span>
-        <span>Logout</span>
+          <span>My Learning</span>
+          <span>Edit Profile</span>
+          <span>Logout</span>
         </nav>
         {role === "instructor" && (
-        <SheetFooter>
+          <SheetFooter>
             <SheetClose asChild>
-            <Button type="submit">Dashboard</Button>
+              <Button type="submit">Dashboard</Button>
             </SheetClose>
-        </SheetFooter>
+          </SheetFooter>
         )}
-    </SheetContent>
+      </SheetContent>
     </Sheet>
   );
 };

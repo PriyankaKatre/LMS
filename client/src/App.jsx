@@ -7,6 +7,11 @@ import Courses from "./pages/student/courses";
 import MyLearning from "./pages/student/myLearning";
 import Profile from "./pages/student/profile";
 import Sidebar from "./pages/admin/Sidebar";
+import Dashboard from "./pages/admin/Dashboard";
+import Course from "./pages/student/course";
+import CourseTable from "./pages/admin/course/CourseTable";
+import AddCourse from "./pages/admin/course/AddCourse";
+import EditCourse from "./pages/admin/course/EditCourse";
 
 const appRouter = createBrowserRouter([
   {
@@ -33,13 +38,31 @@ const appRouter = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
-        },
+      },
 
-        // Admin Routes
-        {
-            path: "admin",
-            element: <Sidebar />
-        }
+      // Admin Routes
+      {
+        path: "admin",
+        element: <Sidebar />,
+        children: [
+          {
+            path: "dashboard",
+            element: <Dashboard />,
+          },
+          {
+            path: "course",
+            element: <CourseTable />,
+          },
+          {
+            path: "course/create",
+            element: <AddCourse />,
+          },
+          {
+            path: "course/:courseId",
+            element: <EditCourse />,
+          },
+        ],
+      },
     ],
   },
 ]);
