@@ -18,14 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import {
-//   useEditCourseMutation,
-//   useGetCourseByIdQuery,
-//   usePublishCourseMutation,
-// } from "@/features/api/courseApi";
+import {
+  useEditCourseMutation,
+  //   useGetCourseByIdQuery,
+  //   usePublishCourseMutation,
+} from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const CourseTab = () => {
   const [input, setInput] = useState({
@@ -42,6 +43,10 @@ const CourseTab = () => {
   const params = useParams();
   const courseId = params.courseId;
 
+  const [editCourse, { data, isLoading, isSuccess, error }] =
+    useEditCourseMutation();
+
+  console.log("data", data);
   //   useEffect(() => {
   //     if (courseByIdData?.course) {
   //       const course = courseByIdData?.course;
@@ -87,11 +92,10 @@ const CourseTab = () => {
     for (let key in input) {
       formData.append(key, input[key]);
     }
-    console.log(input);
     if (file) {
       formData.append("courseThumbnail", file);
     }
-    // await editCourse({ formData, courseId });
+    await editCourse({ formData, courseId });
   };
 
   //   const publishStatusHandler = async (action) => {
@@ -106,16 +110,15 @@ const CourseTab = () => {
   //     }
   //   };
   const isPublished = false;
-  const isLoading = false;
 
-  //   useEffect(() => {
-  //     if (isSuccess) {
-  //       toast.success(data.message || "Course update.");
-  //     }
-  //     if (error) {
-  //       toast.error(error.data.message || "Failed to update course");
-  //     }
-  //   }, [isSuccess, error]);
+    useEffect(() => {
+      if (isSuccess) {
+        toast.success(data.message || "Course update.");
+      }
+      if (error) {
+        toast.error(error.data.message || "Failed to update course");
+      }
+    }, [isSuccess, error]);
 
   //   if (courseByIdLoading) return <h1>Loading...</h1>;
 
