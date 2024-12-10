@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import {
   useEditCourseMutation,
+  useGetCourseByIdQuery,
   //   useGetCourseByIdQuery,
   //   usePublishCourseMutation,
 } from "@/features/api/courseApi";
@@ -45,22 +46,29 @@ const CourseTab = () => {
 
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
+  const {
+    data: getCourseByIdData,
+    isLoading: getCourseByIdLoading,
+    isSuccess: getCourseByIdSuccess,
+    error: getCourseByIdError,
+  } = useGetCourseByIdQuery(courseId);
 
-  console.log("data", data);
-  //   useEffect(() => {
-  //     if (courseByIdData?.course) {
-  //       const course = courseByIdData?.course;
-  //       setInput({
-  //         courseTitle: course.courseTitle,
-  //         subTitle: course.subTitle,
-  //         description: course.description,
-  //         category: course.category,
-  //         courseLevel: course.courseLevel,
-  //         coursePrice: course.coursePrice,
-  //         courseThumbnail: "",
-  //       });
-  //     }
-  //   }, [courseByIdData]);
+  useEffect(() => {
+    console.log("getCourseByIdData?.course", getCourseByIdData?.course);
+    if (getCourseByIdData?.course) {
+      const course = getCourseByIdData?.course;
+
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      });
+    }
+  }, [getCourseByIdData]);
 
   const [previewThumbnail, setPreviewThumbnail] = useState("");
   const navigate = useNavigate();
@@ -78,12 +86,13 @@ const CourseTab = () => {
   };
   // get file
   const selectThumbnail = (e) => {
-    setFile(e.target.files?.[0]);
-    if (file) {
-      setInput({ ...input, courseThumbnail: file });
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setInput({ ...input, courseThumbnail: selectedFile });
       const fileReader = new FileReader();
       fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
-      fileReader.readAsDataURL(file);
+      fileReader.readAsDataURL(selectedFile);
     }
   };
 
@@ -111,14 +120,14 @@ const CourseTab = () => {
   //   };
   const isPublished = false;
 
-    useEffect(() => {
-      if (isSuccess) {
-        toast.success(data.message || "Course update.");
-      }
-      if (error) {
-        toast.error(error.data.message || "Failed to update course");
-      }
-    }, [isSuccess, error]);
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Course update.");
+    }
+    if (error) {
+      toast.error(error.data.message || "Failed to update course");
+    }
+  }, [isSuccess, error]);
 
   //   if (courseByIdLoading) return <h1>Loading...</h1>;
 
@@ -175,10 +184,7 @@ const CourseTab = () => {
           <div className="flex items-center gap-5">
             <div>
               <Label>Category</Label>
-              <Select
-                defaultValue={input.category}
-                onValueChange={selectCategory}
-              >
+              <Select value={input.category} onValueChange={selectCategory}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -208,7 +214,7 @@ const CourseTab = () => {
             <div>
               <Label>Course Level</Label>
               <Select
-                defaultValue={input.courseLevel}
+                value={input.courseLevel}
                 onValueChange={selectCourseLevel}
               >
                 <SelectTrigger className="w-[180px]">

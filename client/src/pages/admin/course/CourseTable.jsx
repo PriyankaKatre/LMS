@@ -61,7 +61,6 @@ const invoices = [
 const CourseTable = () => {
   const navigate = useNavigate();
   const { data, isLoading, issuccess } = useGetCreatorCourseQuery();
-  console.log("data", useGetCreatorCourseQuery());
 
   return (
     <div>
