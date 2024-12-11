@@ -74,6 +74,7 @@ export const courseApi = createApi({
         method: "POST",
         body: { lectureTitle },
       }),
+      invalidatesTags: ["Refetch_Lecture"],
     }),
     getCourseLecture: builder.query({
       query: (courseId) => ({
