@@ -1,4 +1,5 @@
 import { Course } from "../models/course.model.js";
+import { Lecture } from "../models/lecture.model.js";
 import {
   deleteMediaFromCloudinary,
   uploadMedia,
@@ -7,7 +8,6 @@ import {
 export const createCourse = async (req, res) => {
   try {
     const { courseTitle, category } = req.body;
-    console.log(req.body);
     if (!courseTitle || !category) {
       return res.status(400).json({
         message: "Course Title and category are required",
@@ -62,7 +62,8 @@ export const editCourse = async (req, res) => {
       coursePrice,
     } = req.body;
     const thumbnail = req.file;
-
+    console.log("req.body", req.body);
+    console.log("thumbnail", thumbnail);
     let course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({
@@ -126,3 +127,29 @@ export const getCourseById = async (req, res) => {
   }
 };
 
+export const createLecture = async (req, res) => {
+  try {
+    const { lectureTitle } = req.body;
+    const { courseId } = req.params;
+
+    if (!lectureTitle || !courseId) {
+      return res.status(400).json({
+        message: "Lecture Title is Required",
+      });
+    }
+    const lecture = await Lecture.create({ lectureTitle });
+    const course = await Course.findById(courseId);
+    if (course) {
+      course.lectures.push(lecture._id);
+      await Course.save();
+    }
+    return res.status(201).json({
+      lecture,
+      message: "Lecture created successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to create Lecture",
+    });
+  }
+};

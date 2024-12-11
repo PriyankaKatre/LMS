@@ -51,10 +51,10 @@ const CourseTab = () => {
     isLoading: getCourseByIdLoading,
     isSuccess: getCourseByIdSuccess,
     error: getCourseByIdError,
-  } = useGetCourseByIdQuery(courseId);
+  } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
 
   useEffect(() => {
-    console.log("getCourseByIdData?.course", getCourseByIdData?.course);
+    // console.log("getCourseByIdData?.course", getCourseByIdData?.course);
     if (getCourseByIdData?.course) {
       const course = getCourseByIdData?.course;
 
@@ -87,6 +87,7 @@ const CourseTab = () => {
   // get file
   const selectThumbnail = (e) => {
     const selectedFile = e.target.files?.[0];
+
     if (selectedFile) {
       setFile(selectedFile);
       setInput({ ...input, courseThumbnail: selectedFile });
@@ -99,7 +100,10 @@ const CourseTab = () => {
   const updateCourseHandler = async () => {
     const formData = new FormData();
     for (let key in input) {
-      formData.append(key, input[key]);
+      if (key !== "courseThumbnail") {
+        // Avoid appending file here
+        formData.append(key, input[key]);
+      }
     }
     if (file) {
       formData.append("courseThumbnail", file);
