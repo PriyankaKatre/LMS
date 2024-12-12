@@ -3,7 +3,7 @@ import { Lecture } from "../models/lecture.model.js";
 import {
   deleteMediaFromCloudinary,
   uploadMedia,
-} from "../utiles/cloudinary.js";
+} from "../utils/cloudinary.js";
 
 export const createCourse = async (req, res) => {
   try {

@@ -1,10 +1,10 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../utiles/generateToken.js";
+import { generateToken } from "../utils/generateToken.js";
 import {
   uploadMedia,
   deleteMediaFromCloudinary,
-} from "../utiles/cloudinary.js";
+} from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   const { name, email, password } = req.body;

@@ -8,7 +8,7 @@ import {
   getCourseLectures,
 } from "../controllers/course.controllers.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
-import upload from "../utiles/multer.js";
+import upload from "../utils/multer.js";
 
 const router = express.Router();
 
