@@ -1,11 +1,10 @@
-import { express } from 'express';
-import upload from '../utils/multer.js';
-import { uploadMedia } from '../utils/cloudinary.js';
-import { express } from 'express';
+import express from "express";
+import upload from "../utils/multer.js";
+import { uploadMedia } from "../utils/cloudinary.js";
 
 const router = express.Router();
 
-router.route("/").post(upload.single("file"), async (req, res) => {
+router.route("/upload-video").post(upload.single("file"), async (req, res) => {
   try {
     let result = await uploadMedia(req.file.path);
     res.status(200).json({
