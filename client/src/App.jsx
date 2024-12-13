@@ -8,12 +8,11 @@ import MyLearning from "./pages/student/myLearning";
 import Profile from "./pages/student/profile";
 import Sidebar from "./pages/admin/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
-import Course from "./pages/student/course";
 import CourseTable from "./pages/admin/course/CourseTable";
 import AddCourse from "./pages/admin/course/AddCourse";
 import EditCourse from "./pages/admin/course/EditCourse";
 import CreateLecture from "./pages/admin/lecture/CreateLecture";
-import LectureTab from "./pages/admin/lecture/LectureTab";
+import EditLecture from "./pages/admin/lecture/EditLecture";
 
 const appRouter = createBrowserRouter([
   {
@@ -69,7 +68,7 @@ const appRouter = createBrowserRouter([
           },
           {
             path: "course/:courseId/lecture/:lectureId",
-            element: <LectureTab />,
+            element: <EditLecture />,
           },
         ],
       },

@@ -2,6 +2,7 @@ import { Course } from "../models/course.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import {
   deleteMediaFromCloudinary,
+  deleteVedioFromCloudinary,
   uploadMedia,
 } from "../utils/cloudinary.js";
 
@@ -214,8 +215,8 @@ export const editLecture = async (req, res) => {
 };
 export const removeLecture = async (req, res) => {
   try {
-    const { lectureId } = req.params;
-    const lecture = await Lecture.findByIdAndDelete(lectureId);
+      const { lectureId } = req.params;
+      const lecture = await Lecture.findByIdAndDelete(lectureId);
     if (!lecture) {
       return res.status(404).json({
         message: "Lecture not found!",
@@ -223,7 +224,7 @@ export const removeLecture = async (req, res) => {
     }
     // delete the lecture from couldinary as well
     if (lecture.publicId) {
-      await deleteVideoFromCloudinary(lecture.publicId);
+      await deleteVedioFromCloudinary(lecture.publicId);
     }
 
     // Remove the lecture reference from the associated course
