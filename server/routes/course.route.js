@@ -9,6 +9,7 @@ import {
   editLecture,
   removeLecture,
   getLectureById,
+  togglePublishCourse,
 } from "../controllers/course.controllers.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 import upload from "../utils/multer.js";
@@ -28,6 +29,7 @@ router
   .post(isAuthenticated, editLecture);
 router.route("/lecture/:lectureId").delete(isAuthenticated, removeLecture);
 router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
+router.route("/:courseId").put(isAuthenticated, togglePublishCourse);
 
 
 
