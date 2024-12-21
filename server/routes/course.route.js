@@ -29,7 +29,7 @@ router
   .post(isAuthenticated, editLecture);
 router.route("/lecture/:lectureId").delete(isAuthenticated, removeLecture);
 router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
-router.route("/:courseId").put(isAuthenticated, togglePublishCourse);
+router.route("/:courseId").patch(isAuthenticated, togglePublishCourse);
 
 
 

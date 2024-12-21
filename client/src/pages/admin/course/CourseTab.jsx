@@ -22,7 +22,7 @@ import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
   //   useGetCourseByIdQuery,
-  //   usePublishCourseMutation,
+  usePublishCourseMutation,
 } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -51,10 +51,20 @@ const CourseTab = () => {
     isLoading: getCourseByIdLoading,
     isSuccess: getCourseByIdSuccess,
     error: getCourseByIdError,
+    refetch,
   } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
 
+  const [
+    publishCourse,
+    {
+      data: publishedCourseData,
+      isLoading: publishedCourseIsLoading,
+      isSuccess: publishedCourseIsSuccess,
+      error: publishedCourseError,
+    },
+  ] = usePublishCourseMutation();
+
   useEffect(() => {
-    // console.log("getCourseByIdData?.course", getCourseByIdData?.course);
     if (getCourseByIdData?.course) {
       const course = getCourseByIdData?.course;
 
@@ -111,18 +121,20 @@ const CourseTab = () => {
     await editCourse({ formData, courseId });
   };
 
-  //   const publishStatusHandler = async (action) => {
-  //     try {
-  //       const response = await publishCourse({ courseId, query: action });
-  //       if (response.data) {
-  //         refetch();
-  //         toast.success(response.data.message);
-  //       }
-  //     } catch (error) {
-  //       toast.error("Failed to publish or unpublish course");
-  //     }
-  //   };
-  const isPublished = false;
+  const publishStatusHandler = async (action) => {
+
+    try {
+      const response = await publishCourse({ courseId, query: action });
+
+      if (response.data) {
+
+        refetch();
+        toast.success(response.data.message);
+      }
+    } catch () {
+      toast.error("Failed to publish or unpublish course");
+    }
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -146,15 +158,15 @@ const CourseTab = () => {
         </div>
         <div className="space-x-2">
           <Button
-            // disabled={courseByIdData?.course.lectures.length === 0}
+            disabled={getCourseByIdData?.course.lectures.length === 0}
             variant="outline"
-            // onClick={() =>
-            //   publishStatusHandler(
-            //     courseByIdData?.course.isPublished ? "false" : "true"
-            //   )
-            // }
+            onClick={() =>
+              publishStatusHandler(
+                getCourseByIdData?.course.isPublished ? "false" : "true"
+              )
+            }
           >
-            {isPublished ? "Unpublished" : "Publish"}
+            {getCourseByIdData?.course.isPublished ? "Unpublished" : "Publish"}
           </Button>
           <Button>Remove Course</Button>
         </div>
