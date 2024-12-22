@@ -33,7 +33,7 @@ const LectureTab = () => {
   const params = useParams();
   const { courseId, lectureId } = params;
 
-  const { data: lectureData } = useGetLectureByIdQuery(lectureId);
+  const { data: lectureData, refetch } = useGetLectureByIdQuery(lectureId);
   const lecture = lectureData?.lecture;
 
   useEffect(() => {
@@ -43,56 +43,56 @@ const LectureTab = () => {
       setUploadVideoInfo(lecture.videoInfo);
     }
   }, [lecture]);
+    console.log("isFree", isFree);
 
-  const [edtiLecture, { data, isLoading, error, isSuccess }] =
-    useEditLectureMutation();
-  const [
-    removeLecture,
-    { data: removeData, isLoading: removeLoading, isSuccess: removeSuccess },
-  ] = useRemoveLectureMutation();
+    const [edtiLecture, { data, isLoading, error, isSuccess }] =
+      useEditLectureMutation();
+    const [
+      removeLecture,
+      { data: removeData, isLoading: removeLoading, isSuccess: removeSuccess },
+    ] = useRemoveLectureMutation();
 
-  const fileChangeHandler = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      setMediaProgress(true);
-      try {
-        const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
-          onUploadProgress: ({ loaded, total }) => {
-            setUploadProgress(Math.round((loaded * 100) / total));
-          },
-        });
-
-        if (res.data.success) {
-          console.log("res.data.message", res.data.message);
-          setUploadVideoInfo({
-            videoUrl: res.data.data.url,
-            publicId: res.data.data.public_id,
+    const fileChangeHandler = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        setMediaProgress(true);
+        try {
+          const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
+            onUploadProgress: ({ loaded, total }) => {
+              setUploadProgress(Math.round((loaded * 100) / total));
+            },
           });
-          setBtnDisable(false);
-          toast.success(res.data.message);
+
+          if (res.data.success) {
+            console.log("res.data.message", res.data.message);
+            setUploadVideoInfo({
+              videoUrl: res.data.data.url,
+              publicId: res.data.data.public_id,
+            });
+            setBtnDisable(false);
+            toast.success(res.data.message);
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error("video upload failed");
+        } finally {
+          setMediaProgress(false);
         }
-      } catch (error) {
-        console.log(error);
-        toast.error("video upload failed");
-      } finally {
-        setMediaProgress(false);
       }
-    }
-  };
+    };
 
-  const editLectureHandler = async () => {
-    console.log({ lectureTitle, uploadVideInfo, isFree, courseId, lectureId });
-
-    await edtiLecture({
-      lectureTitle,
-      videoInfo: uploadVideInfo,
-      isPreviewFree: isFree,
-      courseId,
-      lectureId,
-    });
-  };
+    const editLectureHandler = async () => {
+      await edtiLecture({
+        lectureTitle,
+        videoInfo: uploadVideInfo,
+        isPreviewFree: isFree,
+        courseId,
+        lectureId,
+      });
+      refetch();
+    };
 
   const removeLectureHandler = async () => {
     await removeLecture(lectureId);

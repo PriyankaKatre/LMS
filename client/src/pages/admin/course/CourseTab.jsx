@@ -107,6 +107,8 @@ const CourseTab = () => {
     }
   };
 
+    console.log("getCourseByIdData", getCourseByIdData);
+
   const updateCourseHandler = async () => {
     const formData = new FormData();
     for (let key in input) {
@@ -127,11 +129,10 @@ const CourseTab = () => {
       const response = await publishCourse({ courseId, query: action });
 
       if (response.data) {
-
         refetch();
         toast.success(response.data.message);
       }
-    } catch () {
+    } catch (e) {
       toast.error("Failed to publish or unpublish course");
     }
   };
