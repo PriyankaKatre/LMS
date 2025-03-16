@@ -36,7 +36,7 @@ export const register = async (req, res) => {
     console.log("failed Register", e);
     return res.status(400).json({
       success: false,
-      message: "Failed to register",
+      message: e.message,
     });
   }
 };
